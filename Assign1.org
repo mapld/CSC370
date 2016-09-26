@@ -1,0 +1,149 @@
+#+OPTIONS: toc:nil
+#+OPTIONS: num:1
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+
+
+CSC370
+
+Assignment 1
+
+Alex Rehnby-Martin
+
+V00806516
+
+
+* Task 1 
+** Relational Algebra
+\pi_{id,year}(\sigma_{attr IS NULL}P \cap \sigma_{title~'Harry Potter'}P \cap \sigma_{year>2011}P) 
+
+** SQL
+
+#+BEGIN_SRC sql 
+with t as 
+(select * from productions where attr is NULL
+intersect
+select * from productions where title~'Harry Potter'
+intersect
+select * from productions where year>2011)
+select id,year from t;
+#+END_SRC
+
+#+RESULTS:
+| id                                                                   | year |
+|----------------------------------------------------------------------+------|
+| Life After Hogwarts: Episode 1 - Harry Potter Goes to Therapy (2012) | 2012 |
+| Drunk Harry Potter (2013)                                            | 2013 |
+| Nizard Harry Potter Rap (2012)                                       | 2012 |
+| Harry Potter v. Voldemort (2012)                                     | 2012 |
+| Harry Potter and the Unlikely Collaboration (2013)                   | 2013 |
+| Harry Potter Casts a revealing spell (2016)                          | 2016 |
+| Harry Potter and the Escape from Gringotts (2014)                    | 2014 |
+| Hufflepuff: A Harry Potter Rap Parody (2015)                         | 2015 |
+| Harry Potter's Parent Teacher Conference (2012)                      | 2012 |
+
+
+* Task 2 
+** Relational Algebra
+\pi_{id,character}(\sigma_{id IN \pi_{id}(\sigma_{attr IS NULL AND year < 1980}P)}(\sigma_{pid='Streep, Meryl'}R))
+
+** SQL
+
+#+BEGIN_SRC sql 
+with allroles as 
+(select * from roles where pid='Streep, Meryl')
+select id,character from allroles where id in 
+(select id from productions where attr is NULL and year < 1980);
+#+END_SRC
+
+#+RESULTS:
+| id                                  | character     |
+|-------------------------------------+---------------|
+| Everybody Rides the Carousel (1975) | Stage 6       |
+| Julia (1977)                        | Anne Marie    |
+| Kramer vs. Kramer (1979)            | Joanna Kramer |
+| Manhattan (1979)                    | Jill          |
+| The Deer Hunter (1978)              | Linda         |
+| The Seduction of Joe Tynan (1979)   | Karen Traynor |
+
+* Task 3 
+** Relational Algebra
+#+begin_latex
+\begin{large}
+#+end_latex
+\pi_{id,character,billing}(\sigma_{id IN \pi_{id}(\sigma_{pid~'Leone, Segio'}D)}(\sigma_{pid='Eastwood, Clint'}R))
+#+begin_latex
+\end{large}
+#+end_latex
+
+** SQL
+
+#+BEGIN_SRC sql 
+with allroles as 
+(select * from roles where pid='Eastwood, Clint')
+select id, character, billing from allroles where id in
+(select id from directors where pid~'^Leone, Sergio');
+#+END_SRC
+
+#+RESULTS:
+| id                                     | character | billing |
+|----------------------------------------+-----------+---------|
+| Il buono, il brutto, il cattivo (1966) | Blondie   |       2 |
+| Per qualche dollaro in più (1965)      | Monco     |       1 |
+| Per un pugno di dollari (1964)         | Joe       |       1 |
+
+
+* Task 4 
+** Relational Algebra
+\pi_{id}(\sigma_{pid='Hawking, Stephen'}R) \cap \pi_{id}(\sigma_{pid='Nimoy, Leonard'}R)
+
+** SQL
+
+#+BEGIN_SRC sql 
+select id from roles where pid='Hawking, Stephen' 
+intersect
+select id from roles where pid='Nimoy, Leonard';
+#+END_SRC
+
+#+RESULTS:
+| id                                                |
+|---------------------------------------------------|
+| The Science of Star Trek (1995) (TV)              |
+| How William Shatner Changed the World (2005) (TV) |
+
+
+* Task 5 
+** Relational Algebra
+#+begin_latex
+\begin{large}
+#+end_latex
+\pi_{id,pid,character}(\sigma_{pid IN (\pi_{pid}(\sigma_{id='The Matrix (1999)'}R) \cap \pi_{pid}(\sigma_{id='The Matrix Reloaded(2003)'}R)) AND}
+
+(id='The Matrix Reloaded (2003)' OR id='The Matrix (1999)') ^R)
+#+begin_latex
+\end{large}
+#+end_latex
+** SQL
+
+#+BEGIN_SRC sql 
+with actors as 
+(select pid from roles where id='The Matrix (1999)' 
+intersect
+select pid from roles where id='The Matrix Reloaded (2003)')
+select id,pid,character from roles where pid in 
+(select * from actors) and
+(id='The Matrix Reloaded (2003)' or id='The Matrix (1999)');
+#+END_SRC
+
+#+RESULTS:
+| id                         | pid                 | character   |
+|----------------------------+---------------------+-------------|
+| The Matrix (1999)          | Reeves, Keanu       | Neo         |
+| The Matrix Reloaded (2003) | Reeves, Keanu       | Neo         |
+| The Matrix (1999)          | Fishburne, Laurence | Morpheus    |
+| The Matrix Reloaded (2003) | Fishburne, Laurence | Morpheus    |
+| The Matrix (1999)          | Weaving, Hugo       | Agent Smith |
+| The Matrix Reloaded (2003) | Weaving, Hugo       | Agent Smith |
+| The Matrix (1999)          | Foster, Gloria (I)  | Oracle      |
+| The Matrix Reloaded (2003) | Foster, Gloria (I)  | The Oracle  |
+| The Matrix (1999)          | Moss, Carrie-Anne   | Trinity     |
+| The Matrix Reloaded (2003) | Moss, Carrie-Anne   | Trinity     |
