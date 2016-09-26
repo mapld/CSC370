@@ -13,8 +13,7 @@ V00806516
 
 * Task 1
 ** Relational Algebra
-⨝ 
-
+\pi_{id=>goteps.id}(\sigma_{id in (\pi_{id}(\sigma_{title='Game of Thrones' and attr='TV-series'}P)E)}⨝_{locations.id=goteps.id}L 
 ** SQL
 #+BEGIN_SRC sql
 with got as
