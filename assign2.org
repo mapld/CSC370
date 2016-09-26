@@ -1,0 +1,39 @@
+#+OPTIONS: toc:nil
+#+OPTIONS: num:1
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+
+
+CSC370
+
+Assignment 2
+
+Alex Rehnby-Martin
+
+V00806516
+
+* Task 1
+** Relational Algebra
+⨝ 
+
+** SQL
+#+BEGIN_SRC sql
+with got as
+(select id from productions where title='Game of Thrones' and attr='TV-series'),
+goteps as
+(select id from episodes where episodeof in (select * from got))
+select distinct country from locations inner join goteps on locations.id=goteps.id;
+#+END_SRC
+
+#+RESULTS:
+| country          |
+|------------------|
+| Northern Ireland |
+| Spain            |
+| Iceland          |
+| Croatia          |
+| Malta            |
+| Morocco          |
+| USA              |
+| Canada           |
+| UK               |
+
