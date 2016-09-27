@@ -13,7 +13,7 @@ V00806516
 
 * Task 1
 ** Relational Algebra
-\pi_{id=>goteps.id}(\sigma_{id in (\pi_{id}(\sigma_{title='Game of Thrones' and attr='TV-series'}P)E)}⨝_{locations.id=goteps.id}L 
+\pi_{id=>got.id}(\sigma_{id in (\pi_{id}(\sigma_{title='Game of Thrones' and attr='TV-series'}P)E)}⨝_{L.id=got.id}L 
 ** SQL
 #+BEGIN_SRC sql
 with got as
@@ -35,4 +35,153 @@ select distinct country from locations inner join goteps on locations.id=goteps.
 | USA              |
 | Canada           |
 | UK               |
+* Task 2 
+** Relational Algebra
+\pi_{title,year,rank}(\sigma_{votes>50000}R ⨝_{R.id = D.id} \sigma_{pid~'Hitchcock, Alfred'}D  ⨝_{R.id = P.id} \sigma_{attr is NULL}P)
+** SQL
+#+BEGIN_SRC sql
+with highvotes as
+(select * from ratings where votes > 50000),
+hitchcock as
+(select * from directors where pid~'Hitchcock, Alfred'),
+films as
+(select * from productions where attr is NULL)
+select title,year,rank from highvotes inner join hitchcock on highvotes.id=hitchcock.id
+inner join films on hitchcock.id=films.id;
+#+END_SRC
+
+#+RESULTS:
+| title                | year | rank |
+|----------------------+------+------|
+| Notorious            | 1946 |    8 |
+| Rope                 | 1948 |    8 |
+| North by Northwest   | 1959 |  8.4 |
+| Rebecca              | 1940 |  8.2 |
+| Dial M for Murder    | 1954 |  8.2 |
+| Psycho               | 1960 |  8.5 |
+| Strangers on a Train | 1951 |  8.1 |
+| Rear Window          | 1954 |  8.5 |
+| The Birds            | 1963 |  7.7 |
+| Vertigo              | 1958 |  8.4 |
+* Task 3 
+** Relational Algebra
+
+
+
+** SQL
+#+BEGIN_SRC sql
+with 
+paul as 
+  (select id,character as paulchar,billing as paulbilling from roles 
+   where pid='Newman, Paul (I)' and character !~'(Himself)'),
+rob as
+  (select id,character as robchar,billing as robbilling from roles
+   where pid='Redford, Robert (I)' and character !~'(Himself)'),
+films as 
+  (select * from productions where attr is NULL)
+select title,year,rank,paulchar,paulbilling,robchar,robbilling from 
+  films inner join ratings on films.id=ratings.id
+  inner join paul on paul.id=films.id
+  inner join rob on paul.id=rob.id;
+#+END_SRC
+
+#+RESULTS:
+| title                              | year | rank | paulchar       | paulbilling | robchar          | robbilling |
+|------------------------------------+------+------+----------------+-------------+------------------+------------|
+| Mickybo and Me                     | 2004 |  7.3 | Butch Cassidy  |             | The Sundance Kid |            |
+| The Sting                          | 1973 |  8.3 | Henry Gondorff |           1 | Johnny Hooker    |          2 |
+| Butch Cassidy and the Sundance Kid | 1969 |  8.1 | Butch Cassidy  |           1 | The Sundance Kid |          2 |
+* Task 4 
+** Relational Algebra
+
+
+
+** SQL
+#+BEGIN_SRC sql
+with hora as
+  (select id from productions where title='Hora Marcada' and attr='TV-series'),
+horaeps as
+  (select id from episodes where episodeof in (select * from hora)),
+dirs as
+  (select * from directors where id in (select * from horaeps))
+select pid, dirs.id as id, rank from dirs left join ratings on dirs.id=ratings.id;
+#+END_SRC
+
+#+RESULTS:
+| pid                      | id                                                           | rank |
+|--------------------------+--------------------------------------------------------------+------|
+| Prior, Jorge             | "Hora Marcada" (1986) {Musica de medianoche}                 |      |
+| Montero, Rafael (I)      | "Hora Marcada" (1986) {Pesadilla}                            |      |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {El taxi}                              |      |
+| Cuarón, Alfonso          | "Hora Marcada" (1986) {Zangamanga}                           |      |
+| Cuarón, Alfonso          | "Hora Marcada" (1986) {A veces regresan}                     |  7.3 |
+| Montero, Rafael (I)      | "Hora Marcada" (1986) {El último metro}                      |      |
+| Carcaño, Álvaro          | "Hora Marcada" (1986) {Martha}                               |      |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {El Dr. Elias y la muerte}             |      |
+| García Agraz, Carlos     | "Hora Marcada" (1986) {Natiely}                              |      |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {Regalo de navidad}                    |      |
+| Cuevas, Ximena           | "Hora Marcada" (1986) {Concierto para mano izquierda (#1.1)} |      |
+| del Toro, Guillermo      | "Hora Marcada" (1986) {Caminos de Ayer}                      |      |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {El café del fin del mundo}            |      |
+| Vélez, Luis              | "Hora Marcada" (1986) {Duplicado}                            |      |
+| del Toro, Guillermo      | "Hora Marcada" (1986) {Invasión}                             |  4.4 |
+| Estrada, Luis (I)        | "Hora Marcada" (1986) {El motel}                             |      |
+| del Toro, Guillermo      | "Hora Marcada" (1986) {Les gourmets}                         |      |
+| Cuarón, Alfonso          | "Hora Marcada" (1986) {Ángel Pérez}                          |      |
+| del Toro, Guillermo      | "Hora Marcada" (1986) {Con todo para llevar}                 |  7.5 |
+| Cuarón, Alfonso          | "Hora Marcada" (1986) {No retornable}                        |    7 |
+| Valdez, Mitl             | "Hora Marcada" (1986) {Una cuestión de honor}                |      |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {Smog}                                 |      |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {De ángeles y demonios}                |  6.2 |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {El revolver}                          |      |
+| del Toro, Guillermo      | "Hora Marcada" (1986) {Hamburguesas}                         |  7.9 |
+| Macias, Alejandro (I)    | "Hora Marcada" (1986) {Los acechantes}                       |      |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {Juegos de video}                      |      |
+| Cuevas, Ximena           | "Hora Marcada" (1986) {Noche de paz}                         |      |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {La bruja tuvo la culpa}               |      |
+| Eguía, Óscar             | "Hora Marcada" (1986) {La sombra}                            |      |
+| Gurrola, Alfredo (I)     | "Hora Marcada" (1986) {Doblemente yo}                        |      |
+| Cuarón, Alfonso          | "Hora Marcada" (1986) {No estoy jugando}                     |      |
+| Rodríguez, María (IV)    | "Hora Marcada" (1986) {Asilo para jovenes}                   |      |
+| Silva, Batan             | "Hora Marcada" (1986) {Pin pon papas}                        |      |
+| de Anda, Gilberto        | "Hora Marcada" (1986) {Un signo de inteligencia (#1.5)}      |      |
+| Cuarón, Alfonso          | "Hora Marcada" (1986) {De Ogros}                             |      |
+| de la Riva, Juan Antonio | "Hora Marcada" (1986) {En el cuarto de arriba}               |      |
+| Macias, Alejandro (I)    | "Hora Marcada" (1986) {En espera de la noche}                |      |
+| Mora Catlett, Juan       | "Hora Marcada" (1986) {El reloj I y II (#1.15)}              |  7.6 |
+| Gurrola, Alfredo (I)     | "Hora Marcada" (1986) {El Johhny}                            |      |
+* Task 5 
+** Relational Algebra
+
+
+
+
+** SQL
+
+
+#+BEGIN_SRC sql
+with lucasprod as
+  (select id from directors where pid='Lucas, George (I)'),
+kurosawaprod as
+  (select id from directors where pid='Kurosawa, Akira')
+select id as lucas,idlinkedto as kurosawa, relationship from links where
+  id in (select * from lucasprod)
+  and
+  idlinkedto in (select * from kurosawaprod); 
+#+END_SRC
+
+#+RESULTS:
+| lucas                                               | kurosawa                            | relationship |
+|-----------------------------------------------------+-------------------------------------+--------------|
+| Star Wars (1977)                                    | Dersu Uzala (1975)                  | references   |
+| Star Wars (1977)                                    | Kakushi-toride no san-akunin (1958) | references   |
+| Star Wars (1977)                                    | Shichinin no samurai (1954)         | references   |
+| Star Wars (1977)                                    | Yôjinbô (1961)                      | references   |
+| Star Wars: Episode II - Attack of the Clones (2002) | Kagemusha (1980)                    | references   |
+| Star Wars: Episode II - Attack of the Clones (2002) | Shichinin no samurai (1954)         | references   |
+| Star Wars: Episode III - Revenge of the Sith (2005) | Shichinin no samurai (1954)         | references   |
+| Star Wars: Episode I - The Phantom Menace (1999)    | Kagemusha (1980)                    | references   |
+| Star Wars: Episode I - The Phantom Menace (1999)    | Kakushi-toride no san-akunin (1958) | references   |
+| Star Wars: Episode I - The Phantom Menace (1999)    | Kumonosu-jô (1957)                  | references   |
+| Star Wars: Episode I - The Phantom Menace (1999)    | Shichinin no samurai (1954)         | references   |
 
