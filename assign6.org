@@ -1,0 +1,74 @@
+#+BEGIN_SRC sql
+CREATE TABLE partshistory(
+pid integer,
+pname varchar(40),
+color varchar(20),
+operation char,
+opwhen timestamp,
+opuser char(20),
+PRIMARY KEY(opwhen,opuser)
+);
+#+END_SRC
+
+#+BEGIN_SRC sql
+\d partshistory
+#+END_SRC
+
+#+RESULTS:
+| Table "public.partshistory"                             |                             |           |
+|---------------------------------------------------------+-----------------------------+-----------|
+| Column                                                  | Type                        | Modifiers |
+| pid                                                     | integer                     |           |
+| pname                                                   | character varying(40)       |           |
+| color                                                   | character varying(20)       |           |
+| operation                                               | character(1)                |           |
+| opwhen                                                  | timestamp without time zone | not null  |
+| opuser                                                  | character(20)               | not null  |
+| Indexes:                                                |                             |           |
+| "partshistory_pkey" PRIMARY KEY, btree (opwhen, opuser) |                             |           |
+
+
+#+BEGIN_SRC sql
+CREATE OR REPLACE FUNCTION record_parts_process() RETURNS TRIGGER AS $record_parts$
+  BEGIN
+    IF (TG_OP = 'UPDATE' ) THEN
+      INSERT INTO partshistory SELECT NEW.pid, NEW.pname, NEW.color, 'U', now(), user;
+      RETURN NEW;
+    ELSEIF (TG_OP = 'INSERT' ) THEN
+      INSERT INTO partshistory SELECT NEW.pid, NEW.pname, NEW.color, 'I', now(), user;
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE' ) THEN
+      INSERT INTO partshistory SELECT OLD.pid, OLD.pname, OLD.color, 'D', now(), user;
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END;
+$record_parts$ LANGUAGE plpgsql;
+
+CREATE TRIGGER record_parts
+AFTER INSERT OR UPDATE OR DELETE ON parts
+  FOR EACH ROW EXECUTE PROCEDURE record_parts_process();
+#+END_SRC
+
+#+RESULTS:
+| CREATE FUNCTION |
+|-----------------|
+| CREATE TRIGGER  |
+
+#+BEGIN_SRC sql
+INSERT INTO parts SELECT 1, 'Bob', 'Blue';
+#+END_SRC
+
+#+RESULTS:
+| INSERT 0 1 |
+|------------|
+
+#+BEGIN_SRC sql
+SELECT * FROM partshistory;
+#+END_SRC
+
+#+RESULTS:
+| pid | pname | color | operation | opwhen                    | opuser |
+|-----+-------+-------+-----------+---------------------------+--------|
+|   1 | Bob   | Blue  | I         | 2016-11-14 21:16:36.17299 | alrm   |
+
