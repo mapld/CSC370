@@ -11,6 +11,22 @@ PRIMARY KEY(opwhen,opuser)
 #+END_SRC
 
 #+BEGIN_SRC sql
+\d parts
+#+END_SRC
+
+#+RESULTS:
+| Table "public.parts"                                                                                         |                       |           |
+|--------------------------------------------------------------------------------------------------------------+-----------------------+-----------|
+| Column                                                                                                       | Type                  | Modifiers |
+| pid                                                                                                          | integer               | not null  |
+| pname                                                                                                        | character varying(40) |           |
+| color                                                                                                        | character varying(20) |           |
+| Indexes:                                                                                                     |                       |           |
+| "parts_pkey" PRIMARY KEY, btree (pid)                                                                        |                       |           |
+| Triggers:                                                                                                    |                       |           |
+| record_parts AFTER INSERT OR DELETE OR UPDATE ON parts FOR EACH ROW EXECUTE PROCEDURE record_parts_process() |                       |           |
+
+#+BEGIN_SRC sql
 \d partshistory
 #+END_SRC
 

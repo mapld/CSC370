@@ -36,12 +36,18 @@ SELECT * FROM alrm_sfunc('Nolan, Christopher (I)');
 #+END_SRC
 
 #+movies:
-| id                                              | year | rank | votes |
-|-------------------------------------------------+------+------+-------|
-| Making Waves: The Art of Cinematic Sound (2016) | 2016 |      |       |
-| Side by Side (2012)                             | 2012 |  7.7 | 11256 |
-| Stanley Kubrick in Focus (2012)                 | 2012 |  7.3 |    13 |
-| Tales from the Warner Bros. Lot (2013)          | 2013 |  6.9 |    24 |
-| These Amazing Shadows (2011)                    | 2011 |  7.6 |  1301 |
-| D.I.Y. (2014)                                   | 2014 |  8.6 |     5 |
-
+| id                            | year | rank |   votes |
+|-------------------------------+------+------+---------|
+| Quay (2015)                   | 2015 |    8 |     357 |
+| The Dark Knight (2008)        | 2008 |    9 | 1685825 |
+| The Dark Knight Rises (2012)  | 2012 |  8.5 | 1151061 |
+| The Exec (2006) {{SUSPENDED}} | 2006 |      |         |
+| The Prestige (2006)           | 2006 |  8.5 |  849119 |
+| Batman Begins (2005)          | 2005 |  8.3 |  986936 |
+| Dunkirk (2017)                | 2017 |      |         |
+| Insomnia (2002)               | 2002 |  7.2 |  219782 |
+| Interstellar (2014)           | 2014 |  8.6 |  937348 |
+| Doodlebug (1997)              | 1997 |  7.1 |   11415 |
+| Following (1998)              | 1998 |  7.6 |   66121 |
+| Inception (2010)              | 2010 |  8.8 | 1476746 |
+| Memento (2000)                | 2000 |  8.5 |  849849 |
