@@ -1,10 +1,19 @@
+#+OPTIONS: toc:nil
+#+OPTIONS: num:1
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
 * Q1
 a) SELECT on MovieStar, SELECT on MovieExec
+
 b) SELECT on MovieExec, SELECT on Movies, SELECT on StarsIn
+
 c) SELECT, INSERT on Studio, SELECT on Movies
+
 d) DELETE on StarsIn
+
 e) UPDATE on MovieExec, SELECT on MovieExec.cert, SELECT on Studio 
+
 f) none?
+
 g) SELECT on RichPress, SELECT on Studio, SELECT on MovieExec 
 
 * Q2
@@ -26,7 +35,7 @@ $$ LANGUAGE SQL;
 SELECT * FROM alrm_sfunc('Nolan, Christopher (I)');
 #+END_SRC
 
-#+RESULTS:
+#+movies:
 | id                                              | year | rank | votes |
 |-------------------------------------------------+------+------+-------|
 | Making Waves: The Art of Cinematic Sound (2016) | 2016 |      |       |
@@ -35,30 +44,4 @@ SELECT * FROM alrm_sfunc('Nolan, Christopher (I)');
 | Tales from the Warner Bros. Lot (2013)          | 2013 |  6.9 |    24 |
 | These Amazing Shadows (2011)                    | 2011 |  7.6 |  1301 |
 | D.I.Y. (2014)                                   | 2014 |  8.6 |     5 |
-
-#+RESUTLS:
-
-#+schema:
-| List of relations |              |       |          |
-|-------------------+--------------+-------+----------|
-| Schema            | Name         | Type  | Owner    |
-| public            | aka          | table | dmg      |
-| public            | as5          | table | dmg      |
-| public            | color        | table | dmg      |
-| public            | countries    | table | dmg      |
-| public            | directors    | table | dmg      |
-| public            | episodes     | table | dmg      |
-| public            | genres       | table | dmg      |
-| public            | languages    | table | dmg      |
-| public            | links        | table | dmg      |
-| public            | locations    | table | dmg      |
-| public            | mid1         | table | dmg      |
-| public            | parts        | table | angushay |
-| public            | partshistory | table | angushay |
-| public            | persons      | table | dmg      |
-| public            | productions  | table | dmg      |
-| public            | ratings      | table | dmg      |
-| public            | roles        | table | dmg      |
-| public            | thematrix    | table | hhart4   |
-| public            | var          | table | rafatm   |
 
